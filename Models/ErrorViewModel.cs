@@ -1,4 +1,4 @@
-namespace Booking_Exam.Models;
+namespace ASP_.Net_Core_Class_Home_Work.Models;
 
 public class ErrorViewModel
 {

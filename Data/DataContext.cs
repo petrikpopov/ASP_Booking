@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Booking_Exam.Data;
+namespace ASP_.Net_Core_Class_Home_Work.Data;
 
-public class DataContext: DbContext
+public class DataContext : DbContext
 {
-    public DbSet<@Data.Entitys.User> Users { set; get; }
+    public DbSet<Data.Entities.User> users { set; get; }
 
     public DataContext(DbContextOptions options) : base(options)
     {
@@ -15,9 +15,8 @@ public class DataContext: DbContext
         //base.OnModelCreating(modelBuilder);
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //base.OnConfiguring(optionsBuilder);
-    }
+        base.OnConfiguring(optionsBuilder);
+    }*/
 }
-
