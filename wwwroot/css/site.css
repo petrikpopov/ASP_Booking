@@ -1,0 +1,66 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+a{
+  text-decoration: none;
+}
+
+.myheader{
+  background: #0c63e4;
+  padding: 18px;
+}
+
+.navbar{
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.login-register{
+ display: flex;
+  gap: 20px;
+}
+
+.myformRegister,
+.form-login{
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid grey;
+  gap: 35px;
+  border-radius: 5px;
+  width: 780px;
+  margin: 20px auto;
+}
+
+.myformRegister button,
+.form-login button{
+  width: 100%;
+}
+
+.register-ref a,
+.login-ref a{
+  display: flex;
+  gap: 5px;
+}
+
+
