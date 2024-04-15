@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@{
+    bool isAuthenticated = Context.User.Identity?.IsAuthenticated ?? false;
+    string avatar = isAuthenticated? Context.User.Claims.First(claim =>claim.Type==ClaimTypes.UserData).Value: "";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -19,22 +24,45 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Booking</a>
+                    <li class="nav-item main-page" >
+                        <a class="nav-link text-dark main-page-ref" asp-area="" asp-controller="Home" asp-action="Index">Booking</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
+                    <ul class="list-type">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark a-sleep" asp-area="" asp-controller="Home" asp-action="Privacy">Жилье</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark a-fly" asp-area="" asp-controller="Home" asp-action="Privacy">Авиабилеты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark a-car" asp-area="" asp-controller="Home" asp-action="Privacy">Аренда машин</a>
+                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark a-taxi" asp-area="" asp-controller="Home" asp-action="Privacy">Такси от/до аэропорта</a>
+                        </li>
+                         <li class="nav-item">
+                             <a class="nav-link text-dark a-taxi" title="Адміністрування контенту" asp-area="" asp-controller="Home" asp-action="Admin"><i class="bi bi-pencil-square"></i></a>
+                             </li>
+                    </ul>
+                    
+                    
                 </ul>
                 <div class="login-register">
-                    <div class="register-ref">
-                         <a asp-controller="Home" asp-action="Singup"><i class="bi bi-person-plus"></i>Регистрация</a>
-                    </div>
-                    <div class="login-ref">
-                         <a asp-controller="Home" asp-action="Login"><i class="bi bi-box-arrow-in-left"></i>Вход</a>
-                    </div>
-                   
-                </div>
+                     @if (isAuthenticated)
+                     {
+                         <img class="size-40 rounded-circle" src="/img/avatars/@(avatar=="" ? "no-avatar.png":avatar)" alt="avatars"/>
+                         <a asp-controller="Home" asp-route-logout="true" asp-action="Index"><i class="bi bi-box-arrow-left"></i></a>
+                     }
+                     else
+                     {
+                         <div class="register-ref">
+                             <a asp-controller="Home" asp-action="Singup"><i class="bi bi-person-plus"></i>Регистрация</a>
+                         </div>
+                         <div class="login-ref">
+                             <a asp-controller="Home" asp-action="Login"><i class="bi bi-box-arrow-in-left"></i>Вход</a>
+                             </div>
+                     }
+                     </div>
                
             </div>
         </div>
@@ -49,6 +77,10 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
+        @if (isAuthenticated)
+        {
+            <b>Ви увійшли до системи!!</b>
+        }
         &copy; 2024 - ASP_.Net_Core_Class_Home_Work - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>

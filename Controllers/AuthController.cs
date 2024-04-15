@@ -26,6 +26,8 @@ public class AuthController : ControllerBase
         }
         else
         {
+            // Cecіі - збереження данних що будуть доступними після перезавантаження странічки
+            HttpContext.Session.SetString("auth-user-id",user.Id.ToString());
             return user;
 
         }
@@ -42,19 +44,3 @@ public class AuthController : ControllerBase
         return new { Status = "Put work" };
     }
 }
-// Контроллери поділяються на 2 групи - API та MVC
-// MVC: мають багато Action, кожен з яких запускається своїм Route
-// /Home/Ioc ---> public ViewResult Ioc(){...}
-// /Home/Form ---> public ViewResult Form(){...}
-// при цьому метод затипу ролі не грає, можливо лише обмежити за перелік
-// GET /Home/Ioc , POST /Home/Form, ---> public ViewResult Ioc()
-// -повернення - IActionResunt, частіше за все ViewResult
-
-
-//API
-// - мають одну адресу [Route("api/auth")], а різні діі запускаються різними методами запитів
-// GET api/auth -->
-// POST api/auth -->
-// PUT api/auth -->
-// вся відмінність - у методі запиту, неможна потрапити до одного Action різними методами
-// - повернення - дані, які автоматично перетворюються або в текс або в json (якщо тип повернення String - text/plain, якщо інший object, List<...> , User --aplication/json)

@@ -7,11 +7,14 @@ public class DataAccessor
     public readonly DataContext _dataContext;
     private readonly IKdfService _kdfService;
     public UserDao UserDao { get; private set; }
+    public ContentDao _ContentDao { get; private set; }
 
     public DataAccessor(DataContext dataContext, IKdfService kdfService)
     {
         _dataContext = dataContext;
         _kdfService = kdfService;
         UserDao = new UserDao(dataContext, kdfService);
+        _ContentDao = new(_dataContext);
+
     }
 }

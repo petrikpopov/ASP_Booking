@@ -13,6 +13,19 @@ public class UserDao
         _kdfService = kdfService;
     }
 
+    public User? GetUserByID(string id)
+    {
+        try
+        {
+            return _DataContext.users.Find(Guid.Parse(id));
+        }
+        catch
+        {
+            return null;
+        }
+
+    }
+
     public User? Authorize(string email, string password)
     {
         var user = _DataContext.users.FirstOrDefault(u => u.Email == email);
@@ -36,4 +49,4 @@ public class UserDao
     }
 }
 // DAL - (Data Access Layer) - сукупність усіх DAO
-// DAO - (Data Access Object) - нфбір методів для роботи з сутністю
+// DAO - (Data Access Object) - нaбір методів для роботи з сутністю

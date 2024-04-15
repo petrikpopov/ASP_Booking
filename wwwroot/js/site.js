@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded',function (){
    if(autorButton){
        autorButton.addEventListener('click',authButtonClick);
    }
+    initAdminPage();
 });
 
 function authButtonClick() {
@@ -56,4 +57,52 @@ function authButtonClick() {
             window.location.reload();
         }
         console.log(r)});
+}
+
+////////// ADMIN-PAge
+function initAdminPage(){
+    loadCategories();
+}
+function loadCategories(){
+    const container =document.getElementById("category-container");
+    if(!container){
+        throw "Element category-container not found!"
+    }
+    fetch("/api/category") // запитуємо наявні категоріі
+        .then(r=>r.json())
+        .then(j=>{
+            let html ="";
+            for (let ctg of j) {
+                html += "<p>" + ctg["name"] + "</p>";
+            }
+            html += `Назва: <input id="ctg-name" /><br/>
+            Опис: <textarea id="ctg-description"></textarea><br/>
+            <button onclick='addCategory()'>Add</button>`;
+            container.innerHTML = html;
+        })
+}
+function loadLocation(){
+    const container = document.getElementById()
+}
+function addCategory(){
+   const ctgName = document.getElementById("ctg-name").value;
+   const ctgDescription = document.getElementById("ctg-description").value;
+   if( confirm(`Додаємо категорію ${ctgName} ${ctgDescription} ?`)){
+       fetch("/api/category",{method:'POST',
+           headers:{'Content-Type':'application/json'},
+           body:JSON.stringify({'name':ctgName,
+               'description':ctgDescription})
+       }).then(r=>{
+           if(r.status==201){
+               loadCategories();
+           }
+           else {
+               alert('Error!');
+           }
+           console.log(r)
+       });
+           
+      // alert('ok');
+   }
+  
 }

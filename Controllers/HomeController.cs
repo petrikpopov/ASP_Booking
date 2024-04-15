@@ -48,7 +48,10 @@ public class HomeController : Controller
     {
         return View();
     }
-
+    public ViewResult Admin()
+    {
+        return View();
+    }
     public IActionResult Singup(@ASP_.Net_Core_Class_Home_Work.Models.Home.Singup.SignupFormModel? formModel)
     {
         @ASP_.Net_Core_Class_Home_Work.Models.Home.Singup.SignupPageModel pageModel = new()
@@ -143,7 +146,8 @@ public class HomeController : Controller
                     fileName = _iRandomService.RandomNameFile(6) + ext;
                     pathName = path + fileName;
                 } while (System.IO.File.Exists(pathName));
-                model.UserAvatar.CopyTo(System.IO.File.OpenWrite(pathName));
+                using var stream = System.IO.File.OpenWrite(pathName);
+                model.UserAvatar.CopyTo(stream);
                 model.SavedAvaterFileName = fileName;
             }
         }

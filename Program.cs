@@ -1,5 +1,6 @@
 using ASP_.Net_Core_Class_Home_Work.Data;
 using ASP_.Net_Core_Class_Home_Work.Data.DAL;
+using ASP_.Net_Core_Class_Home_Work.Middleware;
 using ASP_.Net_Core_Class_Home_Work.Models;
 using ASP_.Net_Core_Class_Home_Work.Services.Hash;
 using ASP_.Net_Core_Class_Home_Work.Services.Kdf;
@@ -31,6 +32,17 @@ builder.Services.AddDbContext<DataContext>(option =>
 
 builder.Services.AddSingleton<DataAccessor>();
 builder.Services.AddSingleton<IKdfService, PBKDF1Service>();
+
+// налаштування сесіі
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(300);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,6 +68,13 @@ app.UseCors(builder => builder
 
     .AllowCredentials());
 app.UseAuthorization();
+
+// підключення
+app.UseSession();
+
+// підключаємо свій Middleware
+//app.UseMiddleware<AuthSessionMiddleware>();
+app.UseAuthSession();
 
 app.MapControllerRoute(
     name: "default",

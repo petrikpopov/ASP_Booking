@@ -35,6 +35,25 @@ a{
   border-radius: 4px;
 }
 
+.navbar-collapse ul{
+  align-items: center;
+}
+.navbar-nav .list-type{
+  display: flex;
+  list-style: none;
+  gap: 25px;
+}
+
+.navbar-nav .navbar-nav,
+.a-sleep, .a-fly, .a-car, .a-taxi{
+  border: 1px solid blue;
+  border-radius: 5px;
+} 
+.main-page-ref{
+ font-weight: 900;
+  font-size: 24px;
+}
+
 .login-register{
  display: flex;
   gap: 20px;
@@ -63,4 +82,8 @@ a{
   gap: 5px;
 }
 
+.size-40{
+  max-width: 40px;
+  max-height: 40px;
+}
 

@@ -10,3 +10,8 @@ public class User
     public string Salt { set; get; } // за RFC-2898 
     public string DerivedKey { set; get; } // за RFC-2898 
 }
+//Категорія - отель квартиры вилы курты
+//Локация - отель1, отель2,отель3
+//Комната - комната1, комната2 , комната3 ......
+
+//
