@@ -3,7 +3,7 @@ using ASP_.Net_Core_Class_Home_Work.Data.Entities;
 
 namespace ASP_.Net_Core_Class_Home_Work.Controllers;
 using Microsoft.AspNetCore.Mvc;
-[Route("api/category")]
+[Route("api/location")]
 [ApiController]
 public class LocationController: ControllerBase
 {
@@ -21,11 +21,32 @@ public class LocationController: ControllerBase
     }
 
     [HttpPost]
-    public string DoPost([FromBody] LocationPostModel model)
+    public string DoPost([FromForm] LocationPostModel model)
     {
         try
-        {
-            _dataAccessor._ContentDao.AddLocation(name:model.Name,description:model.Description,CategoryId:model.CategoryId,Stars:model.Stars);
+        { 
+            String fileName = null;
+            if (model.Photo != null)
+            {
+                
+                
+                     String ext = Path.GetExtension(model.Photo.FileName);
+                     String path = Directory.GetCurrentDirectory() + "/wwwroot/img/Content/";
+                    
+                     String pathName;
+                     do
+                     {
+                         fileName = Guid.NewGuid() + ext;
+                         pathName = path + fileName;
+                     } while (System.IO.File.Exists(pathName));
+                     using var stream = System.IO.File.OpenWrite(pathName);
+                     model.Photo.CopyTo(stream);
+                                    
+                
+
+               
+            }
+            _dataAccessor._ContentDao.AddLocation(name:model.Name,description:model.Description,CategoryId:model.CategoryId,Stars:model.Stars, PhotoUrl:fileName);
             Response.StatusCode = StatusCodes.Status201Created;
             return "Ok";
         }
@@ -42,7 +63,7 @@ public class LocationController: ControllerBase
         public string Description { set; get; }
         public Guid CategoryId { set; get; }
         public int Stars { set; get; }
-
+        public IFormFile Photo { set; get; }
 
     }
 }

@@ -22,11 +22,32 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public string DoPost([FromBody]CategoryPostModel model)
+    public string DoPost([FromForm]CategoryPostModel model)
     {
         try
         {
-            _DataAccessor._ContentDao.AddCategory(model.Name, model.Description);
+            String fileName = null;
+            if (model.Photo != null)
+            {
+                
+                
+                String ext = Path.GetExtension(model.Photo.FileName);
+                String path = Directory.GetCurrentDirectory() + "/wwwroot/img/Content/";
+                    
+                String pathName;
+                do
+                {
+                    fileName = Guid.NewGuid() + ext;
+                    pathName = path + fileName;
+                } while (System.IO.File.Exists(pathName));
+                using var stream = System.IO.File.OpenWrite(pathName);
+                model.Photo.CopyTo(stream);
+                                    
+                
+
+               
+            }
+            _DataAccessor._ContentDao.AddCategory(model.Name, model.Description, fileName);
             Response.StatusCode = StatusCodes.Status201Created;
             return "Ok";
         }
@@ -41,5 +62,6 @@ public class CategoryController : ControllerBase
     {
         public string Name { set; get; }
         public string Description { set; get; }
+        public IFormFile? Photo { set; get; }
     }
 }

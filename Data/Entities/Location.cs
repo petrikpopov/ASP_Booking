@@ -11,4 +11,5 @@ public class Location
     public string Name { set; get; } = null!;
     public string Description { set; get; } = null!;
     public DateTime? DeleteDt { get; set; }
+    public string? PhotoUrl { set; get; }
 }
