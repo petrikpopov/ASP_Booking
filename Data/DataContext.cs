@@ -1,3 +1,4 @@
+using ASP_.Net_Core_Class_Home_Work.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASP_.Net_Core_Class_Home_Work.Data;
@@ -15,6 +16,11 @@ public class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //оскільки  Slug - ідентифікатор , він має бути унікальним
+        modelBuilder.Entity<Category>().HasIndex(c => c.Slug).IsUnique();
+        modelBuilder.Entity<Location>().HasIndex(l => l.Slug).IsUnique();
+        modelBuilder.Entity<Room>().HasIndex(r => r.Slug).IsUnique();
+        
         //base.OnModelCreating(modelBuilder);
     }
 

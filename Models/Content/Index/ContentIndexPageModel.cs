@@ -4,5 +4,5 @@ namespace ASP_.Net_Core_Class_Home_Work.Models.Content.Index;
 
 public class ContentIndexPageModel
 {
-    public List<Category> categories { set; get; } = new ();
+    public List<ASP_.Net_Core_Class_Home_Work.Data.Entities.Category> categories { set; get; } = new ();
 }

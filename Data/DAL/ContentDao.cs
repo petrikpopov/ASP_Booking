@@ -12,17 +12,27 @@ public class ContentDao
         this._dbLocker = _dbLocker;
     }
 
-    public void AddCategory(string name, string description, string? photoUrl)
+    public void AddCategory(string name, string description, string? photoUrl, string? slug=null)
     {
-        _context.categories.Add(new Category()
+        if (slug == null)
         {
-            Id = Guid.NewGuid(),
-            Name=name,
-            Description = description,
-            DeletedDt = null,
-            PhotoUrl = photoUrl
-        });
-        _context.SaveChanges();
+            slug = name;
+        }
+        lock (_dbLocker)
+        {        
+            _context.categories.Add(new Category()
+            {
+                     Id = Guid.NewGuid(),
+                     Name=name,
+                     Description = description,
+                     DeletedDt = null,
+                     PhotoUrl = photoUrl,
+                     Slug = slug
+            });
+            _context.SaveChanges();
+        }
+
+
     }
 
     public List<Category> GetCategories()
@@ -34,6 +44,17 @@ public class ContentDao
         }
 
         return list;
+    }
+
+    public Category? GetCategoryBySlug(string slug)
+    {
+        Category? ctg;
+        lock (_dbLocker)
+        {
+            ctg = _context.categories.FirstOrDefault(c => c.Slug == slug);
+        }
+
+        return ctg;
     }
 
     public void UpdateCategory(Category category)
@@ -63,8 +84,12 @@ public class ContentDao
     }
     public void AddLocation(String name, String description,Guid CategoryId,
         int? Stars = null, Guid? CountryId = null, 
-        Guid? CityId = null, string? Address = null, string? PhotoUrl = null)
+        Guid? CityId = null, string? Address = null, string? PhotoUrl = null, string? slug = null)
     {
+        if (slug == null)
+        {
+            slug = name;
+        }
         lock (_dbLocker)
         {
              _context.locations.Add(new()
@@ -78,13 +103,23 @@ public class ContentDao
                         CityId = CityId,
                         Address = Address,
                         DeleteDt = null,
-                        PhotoUrl = PhotoUrl
+                        PhotoUrl = PhotoUrl,
+                        Slug = slug
              });
              _context.SaveChanges();
         }
        
     }
+    public Location? GetLocationBySlug(string slug)
+    {
+        Location? loc;
+        lock (_dbLocker)
+        {
+            loc = _context.locations.FirstOrDefault(l => l.Slug == slug);
+        }
 
+        return loc;
+    }
     public List<Location> GetLocations(Guid? categoryId = null)
     {
         var query = _context.locations.Where(loc => loc.DeleteDt == null);

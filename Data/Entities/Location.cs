@@ -12,4 +12,7 @@ public class Location
     public string Description { set; get; } = null!;
     public DateTime? DeleteDt { get; set; }
     public string? PhotoUrl { set; get; }
+    
+    public string? Slug { get;set; }
+    
 }

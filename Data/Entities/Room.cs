@@ -9,4 +9,6 @@ public class Room
     public string Name { set; get; } = null!;
     public string Description { set; get; } = null!;
     public DateTime? DeleteDt { get; set; }// ознака доступності
+    public string? Slug { get;set; }
+    public string? PhotoUrl { get; set; }
 }
