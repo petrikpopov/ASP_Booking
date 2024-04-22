@@ -8,7 +8,9 @@ public class User
     public string? AvaratUrl { get; set; }
     public DateTime? Birthdate { get; set; }
     public string Salt { set; get; } // за RFC-2898 
-    public string DerivedKey { set; get; } // за RFC-2898 
+    public string DerivedKey { set; get; } // за RFC-2898
+    
+    public List<Reservation> Reservations { set; get; }
 }
 //Категорія - отель квартиры вилы курты
 //Локация - отель1, отель2,отель3

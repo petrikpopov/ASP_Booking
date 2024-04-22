@@ -11,4 +11,5 @@ public class Room
     public DateTime? DeleteDt { get; set; }// ознака доступності
     public string? Slug { get;set; }
     public string? PhotoUrl { get; set; }
+    public List<Reservation> Reservations { set; get; }
 }

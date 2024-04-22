@@ -14,10 +14,10 @@ public class LocationController: ControllerBase
         _dataAccessor = dataAccessor;
     }
 
-    [HttpGet]
-    public List<Location> DoGet(Guid? categoryId)
+    [HttpGet("{id}")]
+    public List<Location> DoGet(string id)
     {
-        return _dataAccessor._ContentDao.GetLocations(categoryId);
+        return _dataAccessor._ContentDao.GetLocations(id);
     }
 
     [HttpPost]

@@ -2,6 +2,7 @@ using ASP_.Net_Core_Class_Home_Work.Data.DAL;
 using ASP_.Net_Core_Class_Home_Work.Models.Content.Category;
 using ASP_.Net_Core_Class_Home_Work.Models.Content.Index;
 using ASP_.Net_Core_Class_Home_Work.Models.Content.Location;
+using ASP_.Net_Core_Class_Home_Work.Models.Content.Room;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP_.Net_Core_Class_Home_Work.Controllers;
@@ -32,7 +33,7 @@ public class ContentController : Controller
             View("NotFound"): View(new ContentCategoryPageModel()
                 {
                     Category = ctg,
-                    Locations = dataAccessor._ContentDao.GetLocations(ctg.Id)
+                    Locations = dataAccessor._ContentDao.GetLocations(ctg.Slug!)
                 }
             );
     }
@@ -45,6 +46,19 @@ public class ContentController : Controller
             View(new ContentLocationPageModel()
             {
                 Location = loc,
+                Rooms = dataAccessor._ContentDao.GetRooms(loc.Id)
+            });
+    }
+
+    public IActionResult Room([FromRoute] string id)
+    {
+        var room = dataAccessor._ContentDao.GetRoomBySlug(id);
+        
+        return room==null? 
+            View("NotFound"):
+            View(new RoomPageModel()
+            {
+               Room = room
             });
     }
 }

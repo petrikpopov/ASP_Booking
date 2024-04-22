@@ -1,4 +1,5 @@
 using ASP_.Net_Core_Class_Home_Work.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASP_.Net_Core_Class_Home_Work.Data.DAL;
 
@@ -120,14 +121,103 @@ public class ContentDao
 
         return loc;
     }
-    public List<Location> GetLocations(Guid? categoryId = null)
+    public List<Location> GetLocations(String categorySlug)
     {
-        var query = _context.locations.Where(loc => loc.DeleteDt == null);
-        if (categoryId!=null)
+        var ctg = GetCategoryBySlug(categorySlug);
+        if(ctg == null)
         {
-            query = query.Where(loc => loc.CategoryId == categoryId);
+            return new List<Location>();
+        }
+        var query = _context
+            .locations
+            .Where(loc => 
+                loc.DeleteDt == null && 
+                loc.CategoryId == ctg.Id);  
+        return query.ToList();
+    }
+    public void AddRoom(String name, String description, 
+
+        String photoUrl, String slug, Guid locationId, int stars)
+    {
+
+        lock (_dbLocker)
+
+        {
+            _context.rooms.Add(new()
+
+            {
+
+                Id = Guid.NewGuid(),
+
+                Name = name,
+
+                Description = description,
+
+                DeleteDt = null,
+
+                PhotoUrl = photoUrl,
+
+                Slug = slug,
+
+                LocationId = locationId,
+
+                Stars = stars
+
+            });
+
+            _context.SaveChanges();
+
         }
 
-        return query.ToList();
+    }
+
+    public List<Room> GetRooms(string locationSlug)
+    {
+        Location? location;
+        lock (_dbLocker)
+        {
+             location=_context.locations.FirstOrDefault(loc => loc.Slug == locationSlug);
+        }
+       
+        if (location==null)
+        {
+            throw new Exception("Slug belongs to No location!");
+        }
+
+        return GetRooms(location.Id);
+    }
+    public List<Room> GetRooms(Guid locationId)
+    {
+        List<Room> res ;
+        lock (_dbLocker)
+        {
+            res = _context.rooms.Where(r => r.LocationId == locationId).ToList();
+        }
+
+        return res;
+    }
+
+    public Room? GetRoomBySlug(string slug)
+    {
+        Guid? id;
+        try
+        {
+            id = Guid.Parse(slug);
+        }
+        catch
+        {
+            id = null;
+        }
+
+        var slugSelector = (Room c) => c.Slug == slug;
+        var idSelector = (Room c) => c.Id == id;
+        
+        Room? rooms;
+        lock (_dbLocker)
+        {
+            rooms = _context.rooms.Include(r=>r.Reservations).FirstOrDefault(id==null?slugSelector:idSelector);
+        }
+
+        return rooms;
     }
 }
