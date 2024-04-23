@@ -14,6 +14,10 @@ public class RoomFormModel
     public string Slug { set; get; }
     [FromForm(Name = "room-stars")]
     public int Stars { set; get; }
+    
+    [FromForm(Name = "room-price")]
+    public Double DailyPrice { set; get; }
+    
     [FromForm(Name = "room-photo")]
     public IFormFile Photo { set; get; }
    

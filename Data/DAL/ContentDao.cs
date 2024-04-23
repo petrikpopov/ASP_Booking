@@ -1,4 +1,5 @@
 using ASP_.Net_Core_Class_Home_Work.Data.Entities;
+using ASP_.Net_Core_Class_Home_Work.Models.Content.Room;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASP_.Net_Core_Class_Home_Work.Data.DAL;
@@ -137,7 +138,7 @@ public class ContentDao
     }
     public void AddRoom(String name, String description, 
 
-        String photoUrl, String slug, Guid locationId, int stars)
+        String photoUrl, String slug, Guid locationId, int stars, double  Dailyprice)
     {
 
         lock (_dbLocker)
@@ -161,7 +162,8 @@ public class ContentDao
 
                 LocationId = locationId,
 
-                Stars = stars
+                Stars = stars,
+                DailyPrice = Dailyprice
 
             });
 
@@ -219,5 +221,35 @@ public class ContentDao
         }
 
         return rooms;
+    }
+
+    public void ReserveRoom(ReserveRoomFormModel model)
+    {
+        ArgumentNullException.ThrowIfNull(model,nameof(model));
+        if (model.Date < DateTime.Today)
+        {
+            throw new ArgumentException("Date must not be inpast");
+        }
+
+        try
+        {
+            lock (_dbLocker)
+            {
+                _context.Reservations.Add(new()
+                {
+                    Id = Guid.NewGuid(),
+                    Date = model.Date,
+                    RoomId = model.RoomId,
+                    UserId = model.UserId
+
+                });
+                _context.SaveChanges();
+            }
+
+        }
+        catch
+        {
+            throw;
+        }
     }
 }

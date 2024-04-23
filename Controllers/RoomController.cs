@@ -1,4 +1,5 @@
 using ASP_.Net_Core_Class_Home_Work.Data.DAL;
+using ASP_.Net_Core_Class_Home_Work.Data.Entities;
 using ASP_.Net_Core_Class_Home_Work.Models.Content.Location;
 using ASP_.Net_Core_Class_Home_Work.Models.Content.Room;
 
@@ -10,12 +11,26 @@ using Microsoft.AspNetCore.Mvc;
 public class RoomController: ControllerBase
 {
     private readonly DataAccessor _dataAccessor;
+      private readonly ILogger _logger;
 
-    public RoomController(DataAccessor _dataAccessor)
+    public RoomController(DataAccessor _dataAccessor, ILogger<RoomController>logger)
     {
         this._dataAccessor = _dataAccessor;
+        _logger = logger;
     }
 
+
+    [HttpGet("all/{id}")]
+    public List<Room> GetRooms(string id)
+    {
+        //var location = _dataAccessor._ContentDao.GetLocationBySlug(id);
+        List<Room> rooms;
+        {
+            rooms = _dataAccessor._ContentDao.GetRooms(id);
+        }
+        return rooms;
+    }
+    
     [HttpPost]
     public string DoPost( [FromForm] RoomFormModel model)
     {
@@ -47,7 +62,8 @@ public class RoomController: ControllerBase
                 photoUrl: fileName,
                 slug: model.Slug,
                 locationId: model.LocationyId,
-                stars: model.Stars);
+                stars: model.Stars,
+                Dailyprice: model.DailyPrice);
             Response.StatusCode = StatusCodes.Status201Created;
             return "Added";
         }
@@ -62,6 +78,17 @@ public class RoomController: ControllerBase
     [HttpPost("reserve")]
     public string ReserveRoom([FromBody]ReserveRoomFormModel model)
     {
-        return $"{model.UserId}, {model.RoomId}, {model.Date}";
+        try
+        {
+            _dataAccessor._ContentDao.ReserveRoom(model);
+            Response.StatusCode = StatusCodes.Status201Created;
+            return "Reserved";
+        }
+        catch (Exception e)
+        {
+           _logger.LogError(e.Message);
+           Response.StatusCode = StatusCodes.Status400BadRequest;
+           return e.Message;
+        }
     }
 }
