@@ -30,7 +30,25 @@ public class RoomController: ControllerBase
         }
         return rooms;
     }
-    
+
+    [HttpGet("{id}")]
+    public Room GetRoom([FromRoute] string id /*[FromQuery] int? year, [FromQuery] int? moth*/)
+    {
+        var room = _dataAccessor._ContentDao.GetRoomBySlug(id);
+        if (room == null)
+        {
+            Response.StatusCode = StatusCodes.Status404NotFound;
+            return null;
+        }
+
+        room.Reservations = room.Reservations.Where(r => r.Date >= DateTime.Today).ToList();
+        /*room.Reservations.ForEach(r =>
+        {
+            r.Room = null!;
+            r.User = null!;
+        });*/
+        return room;
+    }
     [HttpPost]
     public string DoPost( [FromForm] RoomFormModel model)
     {

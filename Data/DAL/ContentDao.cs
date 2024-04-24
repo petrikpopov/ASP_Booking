@@ -231,25 +231,26 @@ public class ContentDao
             throw new ArgumentException("Date must not be inpast");
         }
 
-        try
+        Room? room;
+        lock (_dbLocker)
         {
-            lock (_dbLocker)
-            {
-                _context.Reservations.Add(new()
-                {
-                    Id = Guid.NewGuid(),
-                    Date = model.Date,
-                    RoomId = model.RoomId,
-                    UserId = model.UserId
-
-                });
-                _context.SaveChanges();
-            }
-
+            room = _context.rooms.Find((model.RoomId));
         }
-        catch
+
+        if (room==null)
         {
-            throw;
+            throw new ArgumentException("Room not Found for id = " + model.RoomId);
         }
+        _context.Reservations.Add(new()
+        {
+            Id = Guid.NewGuid(),
+            Date = model.Date,
+            RoomId = model.RoomId,
+            UserId = model.UserId,
+            Price = room.DailyPrice,
+            OrderDateTime = DateTime.Now
+
+        });
+        _context.SaveChanges();
     }
 }
