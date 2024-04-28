@@ -10,6 +10,9 @@ public class User
     public string Salt { set; get; } // за RFC-2898 
     public string DerivedKey { set; get; } // за RFC-2898
     
+    public DateTime? DeleteDt { set; get; }
+    
+    public string? Role { set; get; }
     public List<Reservation> Reservations { set; get; }
 }
 //Категорія - отель квартиры вилы курты

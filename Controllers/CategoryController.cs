@@ -47,7 +47,7 @@ public class CategoryController : ControllerBase
 
                
             }
-            _DataAccessor._ContentDao.AddCategory(model.Name, model.Description, fileName);
+            _DataAccessor._ContentDao.AddCategory(model.Name, model.Description, fileName,model.Slug);
             Response.StatusCode = StatusCodes.Status201Created;
             return "Ok";
         }
@@ -60,8 +60,16 @@ public class CategoryController : ControllerBase
 
     public class CategoryPostModel
     {
+        [FromForm(Name="category-name")]
         public string Name { set; get; }
+        
+        [FromForm(Name="category-description")]
         public string Description { set; get; }
+        
+        [FromForm(Name="category-slug")]
+        public string Slug { set; get; }
+        
+        [FromForm(Name="category-photo")]
         public IFormFile? Photo { set; get; }
     }
 }

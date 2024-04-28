@@ -1,5 +1,6 @@
 using ASP_.Net_Core_Class_Home_Work.Data.DAL;
 using ASP_.Net_Core_Class_Home_Work.Data.Entities;
+using ASP_.Net_Core_Class_Home_Work.Migrations;
 using ASP_.Net_Core_Class_Home_Work.Models.Content.Location;
 using ASP_.Net_Core_Class_Home_Work.Models.Content.Room;
 
@@ -108,5 +109,29 @@ public class RoomController: ControllerBase
            Response.StatusCode = StatusCodes.Status400BadRequest;
            return e.Message;
         }
+    }
+
+    [HttpDelete("reserve")]
+    public string DropReservation([FromQuery] Guid reservId)
+    {
+        if (reservId == default)
+        {
+            Response.StatusCode = StatusCodes.Status400BadRequest;
+            return "Guid parse error!";
+        }
+
+        try
+        {
+            _dataAccessor._ContentDao.DeleteReservation(reservId);
+            Response.StatusCode = StatusCodes.Status202Accepted;
+            return "";
+        }
+        catch (Exception e)
+        {
+           _logger.LogError(e.Message);
+           Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+           return e.Message;
+        }
+        
     }
 }

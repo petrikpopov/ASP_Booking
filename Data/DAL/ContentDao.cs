@@ -1,4 +1,5 @@
 using ASP_.Net_Core_Class_Home_Work.Data.Entities;
+using ASP_.Net_Core_Class_Home_Work.Migrations;
 using ASP_.Net_Core_Class_Home_Work.Models.Content.Room;
 using Microsoft.EntityFrameworkCore;
 
@@ -220,6 +221,11 @@ public class ContentDao
             rooms = _context.rooms.Include(r=>r.Reservations).FirstOrDefault(id==null?slugSelector:idSelector);
         }
 
+        if (rooms != null)
+        {
+             rooms.Reservations = rooms.Reservations.Where(r => r.DeleteDt == null).ToList();
+        }
+       
         return rooms;
     }
 
@@ -241,6 +247,7 @@ public class ContentDao
         {
             throw new ArgumentException("Room not Found for id = " + model.RoomId);
         }
+        
         _context.Reservations.Add(new()
         {
             Id = Guid.NewGuid(),
@@ -252,5 +259,30 @@ public class ContentDao
 
         });
         _context.SaveChanges();
+    }
+
+    public void DeleteReservation(Guid id)
+    {
+        Reservation? reservations;
+        lock (_dbLocker)
+        {
+            reservations = _context.Reservations.Find(id);
+        }
+
+        if (reservations == null)
+        {
+            throw new ArgumentException("Passed id not found!");
+        }
+
+        if (reservations.DeleteDt != null)
+        {
+            throw new ArgumentException("Passed id already delete");
+        }
+        reservations.DeleteDt = DateTime.Now;
+        lock (_dbLocker)
+        {
+            _context.SaveChanges();
+        }
+        
     }
 }
